@@ -15,6 +15,8 @@ let weatherReport;
 
 let httpRequest = false;
 
+
+
 function getRequestObject() {
    try {
       httpRequest = new XMLHttpRequest();
@@ -54,8 +56,7 @@ function getWeather(evt) {
 }
 
 function fillWeather() {
-   if (httpRequest.readyState === 4 &&
-      httpRequest.status === 200) {
+   if (httpRequest.readyState === 4 && httpRequest.status === 200) {
       weatherReport = JSON.parse(httpRequest.responseText);
       var days = ["Sunday", "Monday", "Tuesday",
          "Wednesday", "Thursday", "Friday", "Saturday"
@@ -64,6 +65,9 @@ function fillWeather() {
       Date(weatherReport.daily.data[0].time);
       var dayOfWeek = dateValue.getDay();
       var rows = document.querySelectorAll("section.week table tbody tr");
+      document.querySelector("section.week table caption").innerHTML = selectedCity;
+      document.querySelector("section.week table caption").style.display = "block";
+      document.querySelector("section.week table").style.display = "inline-block";
       for (var i = 0; i < rows.length; i++) {
          var firstCell =
             rows[i].getElementsByTagName("td")[0];
@@ -77,6 +81,7 @@ function fillWeather() {
          } else {
             dayOfWeek++;
          }
+
          var sun = Math.round((1 -
             weatherReport.daily.data[i].cloudCover) * 100, 0)
 
@@ -103,13 +108,12 @@ function fillWeather() {
          }
          secondCell.style.fontSize = "2.5em";
          thirdCell.innerHTML = sun + "%";
+
       }
-      document.querySelector("section.week table caption").style.display = "block";
-      document.querySelector("section.week table").style.display = "inline - block ";
-      document.querySelector("section.week table caption").innerHTML = selectedCity;
 
 
    }
+   document.querySelector("section.week p.credit").style.display = "block";
 }
 
 var locations = document.querySelectorAll("section ul li");
