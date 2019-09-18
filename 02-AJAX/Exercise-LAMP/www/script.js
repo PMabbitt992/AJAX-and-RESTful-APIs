@@ -10,13 +10,11 @@
 "use strict";
 
 // global variables
-let selectedCity = "Tucson, AZ";
-let weatherReport;
+var selectedCity = "Tucson, AZ";
+var weatherReport;
+var httpRequest = false;
 
-let httpRequest = false;
-
-
-
+//Get a value for if the XML request went through and return the value
 function getRequestObject() {
    try {
       httpRequest = new XMLHttpRequest();
@@ -28,6 +26,7 @@ function getRequestObject() {
    return httpRequest;
 }
 
+//For each button, get the specific lat and long and use those to send a request to the darksky api
 function getWeather(evt) {
    var latitude;
    var longitude;
@@ -55,6 +54,7 @@ function getWeather(evt) {
    httpRequest.onreadystatechange = fillWeather;
 }
 
+//If the request comes back with the information, use said information and put in the 7 day forecast table and a corresponding sun image 
 function fillWeather() {
    if (httpRequest.readyState === 4 && httpRequest.status === 200) {
       weatherReport = JSON.parse(httpRequest.responseText);
@@ -116,6 +116,7 @@ function fillWeather() {
    document.querySelector("section.week p.credit").style.display = "block";
 }
 
+//When the buttons are clicked, get the name of the button to send the information to the request and ge the correct information
 var locations = document.querySelectorAll("section ul li");
 for (var i = 0; i < locations.length; i++) {
    if (locations[i].addEventListener) {
