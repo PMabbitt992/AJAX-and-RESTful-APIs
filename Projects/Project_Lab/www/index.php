@@ -51,6 +51,7 @@
                         <hr>
                         <div class="content">
                             <ul>
+                                <li><a href="http://localhost:8000/stocks.html">stocks()</a></li>
                                 <li><a href="http://localhost:8000/phpinfo.php">phpinfo()</a></li>
                                 <li><a href="http://localhost:8080">phpMyAdmin</a></li>
                                 <li><a href="http://localhost:8000/test_db.php">Test DB Connection</a></li>
