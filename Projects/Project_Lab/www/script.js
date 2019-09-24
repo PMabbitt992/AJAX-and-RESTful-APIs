@@ -9,7 +9,7 @@
 "use strict";
 
 var httpRequest = false;
-var entry = "^IXIC";
+var entry = "MSFT";
 
 
 function getRequestObject() {
@@ -34,8 +34,11 @@ function stopSubmission(evt) {
 
 
 function getQuote() {
+    console.log("getQuote()");
     if (document.getElementsByTagName("input")[0].value) {
         entry = document.getElementsByTagName("input")[0].value;
+    } else {
+        document.getElementsByTagName("input")[0].value = entry;
     }
     if (!httpRequest) {
         httpRequest = getRequestObject();
@@ -44,6 +47,8 @@ function getQuote() {
     httpRequest.open("get", "StockCheck.php?t=" + entry, true);
     httpRequest.send(null);
     httpRequest.onreadystatechange = displayData;
+    clearTimeout(updateQuote);
+    var updateQuote = setTimeout('getQuote()', 10000);
 }
 
 function displayData() {
