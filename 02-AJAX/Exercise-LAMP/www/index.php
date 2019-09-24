@@ -6,7 +6,7 @@
         <title>LAMP STACK</title>
         <link rel="stylesheet" href="/assets/css/bulma.min.css">
     </head>
-    <body>
+    <body>`
         <section class="hero is-medium is-info is-bold">
             <div class="hero-body">
                 <div class="container has-text-centered">
