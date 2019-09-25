@@ -36,9 +36,6 @@ function stopSubmission(evt) {
 function getQuote() {
     if (document.getElementsByTagName("input")[0].value) {
         entry = document.getElementsByTagName("input")[0].value;
-        // } else {
-        //     document.getElementsByTagName("input")[0].value = entry;
-        // }
         if (!httpRequest) {
             httpRequest = getRequestObject();
         }
