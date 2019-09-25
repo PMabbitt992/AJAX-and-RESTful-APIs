@@ -34,47 +34,49 @@ function stopSubmission(evt) {
 
 
 function getQuote() {
-    console.log("getQuote()");
     if (document.getElementsByTagName("input")[0].value) {
         entry = document.getElementsByTagName("input")[0].value;
-    } else {
-        document.getElementsByTagName("input")[0].value = entry;
-    }
-    if (!httpRequest) {
-        httpRequest = getRequestObject();
-    }
-    httpRequest.abort();
-    httpRequest.open("get", "StockCheck.php?t=" + entry, true);
-    httpRequest.send(null);
-    httpRequest.onreadystatechange = displayData;
-    clearTimeout(updateQuote);
-    var updateQuote = setTimeout('getQuote()', 10000);
-}
+        // } else {
+        //     document.getElementsByTagName("input")[0].value = entry;
+        // }
+        if (!httpRequest) {
+            httpRequest = getRequestObject();
+        }
+        let current = new Date();
+        let threeDaysAgo = new Date();
+        threeDaysAgo.setDate(current.getDate() - 3);
+        let dateOne = `2017-${getMonth(threeDaysAgo.getMonth())}-${threeDaysAgo.getDate()}`;
+        let dateTwo = `2017-${getMonth(current.getMonth())}-${current.getDate()}`
 
-function displayData() {
-    if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-        var stockResults = httpRequest.responseText;
-        var stockItems = stockResults.split(/,|\"/);
-        for (var i = stockItems.length - 1; i >= 0; i--) {
-            if (stockItems[i] === "") {
-                stockItems.splice(i, 1);
+        httpRequest.abort();
+        httpRequest.open("get", `StockCheck.php?t=${entry}&s=${dateOne}&e=${dateTwo}`, true);
+        httpRequest.send(null);
+        httpRequest.onreadystatechange = displayData;
+    }
+
+    function getMonth(month) {
+        var curMonth = month > 0 ? month + 1 : 12;
+        return curMonth < 10 ? "0" + curMonth : curMonth;
+    }
+
+    function displayData() {
+        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+            var stockResults = httpRequest.responseText;
+            var stockItems;
+            try {
+                stockItems = JSON.parse(stockResults);
+            } catch (error) {
+                document.getElementById("ticker").innerHTML = stockItems.dataset.dataset_code;
+                document.getElementById("openingPrice").innerHTML = stockItems.dataset.data[0][1];
+                document.getElementById("lastTrade").innerHTML = stockItems.dataset.data[1][4];
+                document.getElementById("lastTradeDT").innerHTML = stockItems.dataset.data[1][0].replace("2017", new Date().getFullYear());
+                document.getElementById("change").innerHTML = ((parseFloat(stockItems.dataset.data[1][4]) - parseFloat(stockItems.dataset.data[0][1]))).toFixed(2);
+                document.getElementById("range").innerHTML = "Low " + stockItems.dataset.data[0][3] + "<br>High " + stockItems.dataset.data[0][2];
+                document.getElementById("volume").innerHTML = stockItems.dataset.data[0][5];
+                return;
             }
         }
-        console.log(stockItems);
-        document.getElementById("ticker").innerHTML = stockItems[0];
-        document.getElementById("openingPrice").innerHTML =
-            stockItems[6];
-        document.getElementById("lastTrade").innerHTML =
-            stockItems[1];
-        document.getElementById("lastTradeDT").innerHTML =
-            stockItems[2] + ", " + stockItems[3];
-        document.getElementById("change").innerHTML = stockItems[4];
-        document.getElementById("range").innerHTML = (stockItems[8] *
-            1).toFixed(2) + " &ndash; " + (stockItems[7] * 1).toFixed(2);
-        document.getElementById("volume").innerHTML = (stockItems[9] *
-            1).toLocaleString();
     }
-
 }
 
 function formatTable() {
