@@ -12,6 +12,7 @@ var httpRequest = false;
 var entry = "MSFT";
 
 
+
 function getRequestObject() {
 
     try {
@@ -40,11 +41,11 @@ function getQuote() {
             httpRequest = getRequestObject();
         }
         let current = new Date();
+
         let threeDaysAgo = new Date();
         threeDaysAgo.setDate(current.getDate() - 3);
         let dateOne = `2017-${getMonth(threeDaysAgo.getMonth())}-${threeDaysAgo.getDate()}`;
         let dateTwo = `2017-${getMonth(current.getMonth())}-${current.getDate()}`
-
         httpRequest.abort();
         httpRequest.open("get", `StockCheck.php?t=${entry}&s=${dateOne}&e=${dateTwo}`, true);
         httpRequest.send(null);
@@ -62,7 +63,6 @@ function getQuote() {
             var stockItems;
             try {
                 stockItems = JSON.parse(stockResults);
-            } catch (error) {
                 document.getElementById("ticker").innerHTML = stockItems.dataset.dataset_code;
                 document.getElementById("openingPrice").innerHTML = stockItems.dataset.data[0][1];
                 document.getElementById("lastTrade").innerHTML = stockItems.dataset.data[1][4];
@@ -71,6 +71,17 @@ function getQuote() {
                 document.getElementById("range").innerHTML = "Low " + stockItems.dataset.data[0][3] + "<br>High " + stockItems.dataset.data[0][2];
                 document.getElementById("volume").innerHTML = stockItems.dataset.data[0][5];
                 return;
+            } catch (error) {
+                console.log('test');
+                document.getElementById("ticker").innerHTML = "Error: Invalid Ticker.";
+                document.getElementById("openingPrice").innerHTML = "-";
+                document.getElementById("lastTrade").innerHTML = "-";
+                document.getElementById("lastTradeDT").innerHTML = "-";
+                document.getElementById("change").innerHTML = "-";
+                document.getElementById("range").innerHTML = "-";
+                document.getElementById("volume").innerHTML = "-";
+                return;
+
             }
         }
     }
